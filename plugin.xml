@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="com.bkonecsni.javaCCBuilder"
+         name="JavaCC Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.bkonecsni.codeanalysis.builder.JavaCCBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="com.bkonecsni.javaCCNature"
+         name="JavaCC Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.bkonecsni.codeanalysis.builder.JavaCCNature">
+         </run>
+      </runtime>
+      <builder
+            id="com.bkonecsni.codeanalysis.com.bkonecsni.javaCCBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="JavaCC Nature commands"
+            id="com.bkonecsni.codeanalysis.com.bkonecsni.javaCCNature.category">
+      </category>
+      <command
+            name="Add/RemoveJavaCC Nature"
+            defaultHandler="com.bkonecsni.codeanalysis.builder.AddRemoveJavaCCNatureHandler"
+            categoryId="com.bkonecsni.codeanalysis.com.bkonecsni.javaCCNature.category"
+            id="com.bkonecsni.codeanalysis.addRemoveJavaCCNature">
+      </command>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="com.bkonecsni.codeanalysis.addRemoveJavaCCNature"
+               label="Disable Sample builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              value="com.bkonecsni.codeanalysis.com.bkonecsni.javaCCNature"
+                              property="org.eclipse.core.resources.projectNature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.bkonecsni.codeanalysis.addRemoveJavaCCNature"
+               label="Enable Sample builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 value="com.bkonecsni.codeanalysis.com.bkonecsni.javaCCNature"
+                                 property="org.eclipse.core.resources.projectNature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension point="org.eclipse.ui.actionSets">
+		<actionSet label="Code Analysis" description="Code Analysis" visible="true" id="com.bkonecsni.codeanalysis.actionSet">
+			<menu label="Refactor" path="edit" id="org.eclipse.jdt.ui.refactoring.menu">
+				<separator name="codeAnalysis"/>
+			</menu>
+			<action label="List classes" class="com.bkonecsni.codeanalysis.actions.ActionDelegate" menubarPath="org.eclipse.jdt.ui.refactoring.menu/codeAnalysis" id="com.bkonecsni.codeanalysis.actionDelegate" />
+		</actionSet>
+	</extension>
+
+</plugin>
