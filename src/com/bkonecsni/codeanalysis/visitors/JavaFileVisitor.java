@@ -8,7 +8,8 @@ public class JavaFileVisitor implements IResourceVisitor{
 	@Override
 	public boolean visit(IResource resource) {
 		//TODO: print methods and fields
-		if (resource.getFileExtension().equals("java")) {
+		String extension = resource.getFileExtension();
+		if (extension != null && extension.equals("java")) {
 			System.out.println(resource.getName());
 		}
 		return true;
