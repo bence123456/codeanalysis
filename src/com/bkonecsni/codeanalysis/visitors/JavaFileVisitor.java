@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.search.FieldDeclarationMatch;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
@@ -15,41 +16,41 @@ import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
+import org.eclipse.jdt.internal.core.SourceField;
 
 import com.bkonecsni.codeanalysis.ProblemTypes;
+import com.bkonecsni.codeanalysis.searchrequestors.FieldSearchRequestor;
+import com.bkonecsni.codeanalysis.searchrequestors.MethodSearchRequestor;
 
 public class JavaFileVisitor implements IResourceVisitor{
 	
 	@Override
 	public boolean visit(IResource resource) {
-		//TODO: print methods and fields
 		String extension = resource.getFileExtension();
 		if (extension != null && extension.equals("java")) {
 			System.out.println(resource.getName());
 			
-			IJavaElement javaElement = JavaCore.create(resource);
-			
-		    SearchPattern pattern = SearchPattern.createPattern("*", IJavaSearchConstants.FIELD, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH);
-	        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] {javaElement});
-
-	        SearchRequestor requestor = new SearchRequestor() {
-	            @Override
-	            public void acceptSearchMatch(SearchMatch match) {
-	                System.out.println(match.getElement());
-	            }
-	        };
-	        
-	        SearchEngine searchEngine = new SearchEngine();
-	        SearchParticipant[] searchParticipants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
-			try {
-				searchEngine.search(pattern, searchParticipants, scope, requestor, new NullProgressMonitor());
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}		
+			searcAndListMembers(resource, IJavaSearchConstants.FIELD, new FieldSearchRequestor());
+			searcAndListMembers(resource, IJavaSearchConstants.METHOD, new MethodSearchRequestor());
 			
 			createMarker(resource);
 		}
 		return true;
+	}
+
+	private void searcAndListMembers(IResource resource, int searchConstant, SearchRequestor requestor) {
+		IJavaElement javaElement = JavaCore.create(resource);
+		
+		SearchPattern pattern = SearchPattern.createPattern("*", searchConstant, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH);
+		IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] {javaElement});
+		
+		SearchEngine searchEngine = new SearchEngine();
+		SearchParticipant[] searchParticipants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
+		try {
+			searchEngine.search(pattern, searchParticipants, scope, requestor, new NullProgressMonitor());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void createMarker(IResource resource) {
