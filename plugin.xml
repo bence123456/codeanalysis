@@ -112,14 +112,13 @@
 			</menu>
 			<action label="List all files" class="com.bkonecsni.codeanalysis.actions.ListAllFilesAction" menubarPath="org.eclipse.jdt.ui.refactoring.menu/codeAnalysis" id="com.bkonecsni.codeanalysis.listAllFilesAction" />
 			<action label="List Java files" class="com.bkonecsni.codeanalysis.actions.ListJavaFilesAction" menubarPath="org.eclipse.jdt.ui.refactoring.menu/codeAnalysis" id="com.bkonecsni.codeanalysis.listJavaFilesAction" />
+			<action label="Analyze code" class="com.bkonecsni.codeanalysis.actions.CodeAnalysis" menubarPath="org.eclipse.jdt.ui.refactoring.menu/codeAnalysis" id="com.bkonecsni.codeanalysis.codeAnalysis" />
 		</actionSet>
 	</extension>	
-	<extension id="codeanalysismarker" point="org.eclipse.core.resources.markers" />
+	<extension id="codeanalysismarker" point="org.eclipse.core.resources.markers" /> 
    	<extension id="codeanalysisproblems" point="org.eclipse.core.resources.markers">
       	<super type="org.eclipse.core.resources.problemmarker"/>
       	<super type="com.bkonecsni.codeanalysis.codeanalysismarker"/>
-      	<attribute name="problemType" />
-    	<persistent value="true" />
    	</extension>
 
 </plugin>

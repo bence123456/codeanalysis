@@ -5,10 +5,14 @@ import org.eclipse.core.runtime.CoreException;
 
 import com.bkonecsni.codeanalysis.visitors.JavaFileVisitor;
 
-public class ListJavaFilesAction extends ListAllFilesAction {
+public class ListJavaFilesAction extends AbstractAction {
 	
 	@Override
-	protected void listFiles(IProject activeProject) {		
+	protected void executeAction(IProject activeProject) {
+		listJavaFiles(activeProject);		
+	}
+	
+	private void listJavaFiles(IProject activeProject) {		
 		System.out.println("Listing java files from current project!");
 		try {
 			activeProject.accept(new JavaFileVisitor());
