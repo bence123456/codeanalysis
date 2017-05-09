@@ -2,6 +2,9 @@ package com.bkonecsni.codeanalysis.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -18,7 +21,7 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction arg0) {
 		IEditorPart editorPart = window.getActivePage().getActiveEditor();
-		if(editorPart  != null) {
+		if(editorPart != null) {
 			IProject activeProject = getActiveProject(editorPart);
 		    executeAction(activeProject);
 		} else {	
@@ -26,17 +29,17 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 		}
 	}
 
-	private IProject getActiveProject(IEditorPart editorPart) {
+	private void showMessageBox() {
+		MessageBox dialog = new MessageBox(window.getShell(), SWT.ICON_INFORMATION | SWT.OK);
+		dialog.setText("Cannot perform selected action!");
+		dialog.setMessage("Please first select a file from one of the projects!");
+		dialog.open();
+	}
+	
+	protected IProject getActiveProject(IEditorPart editorPart) {
 		IFileEditorInput input = (IFileEditorInput) editorPart.getEditorInput() ;
 		IFile file = input.getFile();
 		return file.getProject();
-	}
-
-	private void showMessageBox() {
-		MessageBox dialog = new MessageBox(window.getShell(), SWT.ICON_INFORMATION | SWT.OK);
-		dialog.setText("Cannot list files!");
-		dialog.setMessage("Please first select a file from one of the projects!");
-		dialog.open();
 	}
 	
 	protected abstract void executeAction(IProject activeProject);
@@ -54,4 +57,7 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 	public void dispose() {
 	}
 
+	public IWorkbenchWindow getWindow() {
+		return window;
+	}
 }

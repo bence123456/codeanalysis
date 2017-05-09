@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 public class ASTCodeAnalysisVisitor extends ASTVisitor {
 	
@@ -24,13 +25,19 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
 	
     @Override
     public boolean visit(VariableDeclarationFragment node) {    	
-    	System.out.print("Node type: " + node.getNodeType() + "\n");
-    	System.out.println("Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
+    	System.out.println("VariableDeclarationFragment Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
     	
     	return true;
     }
     
-    public boolean visit(MethodInvocation node) {          
+    @Override
+    public boolean visit(VariableDeclarationStatement node) {    	
+    	System.out.println("VariableDeclarationStatement Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
+    	
+    	return true;
+    }
+    
+    public boolean visit(MethodInvocation node) { 
         Expression expression = node.getExpression();
 
         if(expression instanceof Name) {
@@ -42,9 +49,7 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
 	        int lineNumber = compUnit.getLineNumber(node.getStartPosition());
 	        
 	        createMarker(resource, warningText, lineNumber);
-	            
-	        System.out.println(warningText);
-        }        
+        }
         return true;
     }
 
@@ -89,7 +94,4 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
 			e.printStackTrace();
 		}
 	}
-	
-
-    
 }

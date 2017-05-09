@@ -20,7 +20,6 @@ public class CodeAnalysisVisitor implements IResourceVisitor {
 	public boolean visit(IResource resource) throws JavaModelException, CoreException {
 		String extension = resource.getFileExtension();
 		if (extension != null && extension.equals("java")) {
-			System.out.println("\n" + resource.getName());
 			resource.deleteMarkers(ASTCodeAnalysisVisitor.MARKER_TYPE, true, 0);
 			
 			ASTNode node = createASTNode(resource);	
