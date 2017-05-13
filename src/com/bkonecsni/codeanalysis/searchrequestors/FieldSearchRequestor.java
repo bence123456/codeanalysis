@@ -8,7 +8,7 @@ public class FieldSearchRequestor extends SearchRequestor {
 
 	@Override
 	public void acceptSearchMatch(SearchMatch match) {
-    	SourceField sourceField = (SourceField) match.getElement();
-		System.out.println("-field- " + sourceField.getElementName());	
+	    SourceField sourceField = (SourceField) match.getElement();
+		System.out.println("-field- " + sourceField.getElementName());
 	}
 }

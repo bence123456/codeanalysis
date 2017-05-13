@@ -20,8 +20,8 @@ public class JavaFileVisitor implements IResourceVisitor{
 	
 	@Override
 	public boolean visit(IResource resource) {
-		String extension = resource.getFileExtension();
-		if (extension != null && extension.equals("java")) {
+		IJavaElement javaElement = JavaCore.create(resource);
+		if (javaElement != null && javaElement.getElementType() == IJavaElement.COMPILATION_UNIT) {
 			System.out.println("\n" + resource.getName());
 			
 			searcAndListMembers(resource, IJavaSearchConstants.FIELD, new FieldSearchRequestor());

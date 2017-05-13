@@ -2,9 +2,6 @@ package com.bkonecsni.codeanalysis.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -24,7 +21,7 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 		if(editorPart != null) {
 			IProject activeProject = getActiveProject(editorPart);
 		    executeAction(activeProject);
-		} else {	
+		} else {
 			showMessageBox();
 		}
 	}

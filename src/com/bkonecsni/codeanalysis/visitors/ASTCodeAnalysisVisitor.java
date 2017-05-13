@@ -1,5 +1,7 @@
 package com.bkonecsni.codeanalysis.visitors;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -10,7 +12,6 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 public class ASTCodeAnalysisVisitor extends ASTVisitor {
@@ -19,24 +20,18 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
 	
 	public static final String MARKER_TYPE = "com.bkonecsni.codeanalysis.codeanalysisproblems";
 		
-	ASTCodeAnalysisVisitor(CompilationUnit compUnit) {
+	public ASTCodeAnalysisVisitor(CompilationUnit compUnit) {
 		this.compUnit = compUnit;
 	}
-	
+    
     @Override
-    public boolean visit(VariableDeclarationFragment node) {    	
-    	System.out.println("VariableDeclarationFragment Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
+    public boolean visit(VariableDeclarationStatement node) {
+    	//System.out.println("VariableDeclarationStatement Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
     	
     	return true;
     }
     
     @Override
-    public boolean visit(VariableDeclarationStatement node) {    	
-    	System.out.println("VariableDeclarationStatement Node: " + node + "  at row: " + compUnit.getLineNumber(node.getStartPosition()));
-    	
-    	return true;
-    }
-    
     public boolean visit(MethodInvocation node) { 
         Expression expression = node.getExpression();
 
@@ -53,25 +48,23 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
         return true;
     }
 
-    private String createWarningText(MethodInvocation node, IBinding binding) {
-    	StringBuilder sb = new StringBuilder();
+    private String createWarningText(MethodInvocation node, IBinding binding) {    	
+    	String methodName = node.getName().getFullyQualifiedName();
+    	String declType = getVariableDeclarationTypeString(binding);
+    	String variableType = getVariableTypeString(binding);
+    	String variableName = binding.getName();
     	
-    	sb.append("Calling the method '");
-    	sb.append(node.getName().getFullyQualifiedName());
-    	sb.append("' on "+ getVariableDeclarationTypeString(binding) + " variable ");
-    	sb.append(getVariableTypeString(binding) + " " + binding.getName());
-    	sb.append(" may result in a NPE");
-    	
-    	return sb.toString();
+    	return MessageFormat.format("Calling the method \"{0}\" on {1} {2} {3} may result in a NPE", 
+    			methodName, declType, variableType, variableName);
     }
     
     private String getVariableDeclarationTypeString(IBinding binding) {
         IJavaElement javaElement = binding.getJavaElement();
         
         if (javaElement.getElementType() == 8) {
-        	return "field";
+        	return "field ";
         } else {
-        	return "local";
+        	return "local variable ";
         }
     }
     

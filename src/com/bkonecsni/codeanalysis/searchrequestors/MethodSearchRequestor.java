@@ -8,7 +8,7 @@ public class MethodSearchRequestor extends SearchRequestor {
 
 	@Override
 	public void acceptSearchMatch(SearchMatch match) {
-    	SourceMethod sourceMethod = (SourceMethod) match.getElement();
-		System.out.println("-method- " + sourceMethod.getElementName());	
+		SourceMethod sourceMethod = (SourceMethod) match.getElement();
+		System.out.println("-method- " + sourceMethod.getElementName());
 	}
 }
