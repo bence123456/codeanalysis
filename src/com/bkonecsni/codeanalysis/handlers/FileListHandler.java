@@ -1,12 +1,12 @@
-package com.bkonecsni.codeanalysis.actions;
+package com.bkonecsni.codeanalysis.handlers;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import com.bkonecsni.codeanalysis.visitors.FileVisitor;
 
-public class ListAllFilesAction extends AbstractAction {
-	
+public class FileListHandler extends CommonHandler {
+
 	@Override
 	protected void executeAction(IProject activeProject) {
 		listFiles(activeProject);
@@ -20,4 +20,5 @@ public class ListAllFilesAction extends AbstractAction {
 			e.printStackTrace();
 		}
 	}
+
 }

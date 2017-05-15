@@ -1,4 +1,4 @@
-package com.bkonecsni.codeanalysis.actions;
+package com.bkonecsni.codeanalysis.handlers;
 
 import java.util.Map;
 
@@ -20,18 +20,14 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindow;
 
 import com.bkonecsni.codeanalysis.visitors.ASTCodeAnalysisVisitor;
 
-public class CodeAnalysisAction extends AbstractAction {
+public class CodeAnalysisHandler extends CommonHandler{
 	
 	private boolean autoAnalysisEnabled = true;
 	
-	@Override
-	public void init(IWorkbenchWindow window) {	
-		super.init(window);
-		
+	public CodeAnalysisHandler() {
 		addResourceChangeListener();
 	}
 	

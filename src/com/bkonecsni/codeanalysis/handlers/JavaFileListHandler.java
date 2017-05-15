@@ -1,4 +1,4 @@
-package com.bkonecsni.codeanalysis.actions;
+package com.bkonecsni.codeanalysis.handlers;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.JavaCore;
 
 import com.bkonecsni.codeanalysis.visitors.JavaFileVisitor;
 
-public class ListJavaFilesAction extends AbstractAction {
+public class JavaFileListHandler extends CommonHandler {
 	
 	@Override
 	protected void executeAction(IProject activeProject) {

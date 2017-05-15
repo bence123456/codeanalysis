@@ -1,22 +1,24 @@
-package com.bkonecsni.codeanalysis.actions;
+package com.bkonecsni.codeanalysis.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
-
-    private IWorkbenchWindow window;
+public abstract class CommonHandler extends AbstractHandler {
+	
+	private IWorkbenchWindow window;
 	
 	@Override
-	public void run(IAction arg0) {
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		this.window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		IEditorPart editorPart = window.getActivePage().getActiveEditor();
 		if(editorPart != null) {
 			IProject activeProject = getActiveProject(editorPart);
@@ -24,6 +26,7 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 		} else {
 			showMessageBox();
 		}
+		return null;
 	}
 
 	private void showMessageBox() {
@@ -40,19 +43,6 @@ public abstract class AbstractAction implements IWorkbenchWindowActionDelegate {
 	}
 	
 	protected abstract void executeAction(IProject activeProject);
-
-	@Override
-	public void init(IWorkbenchWindow window) {	
-		this.window = window;
-	}
-	
-	@Override
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-	}
-
-	@Override
-	public void dispose() {
-	}
 
 	public IWorkbenchWindow getWindow() {
 		return window;
