@@ -13,7 +13,9 @@
         	<menu id="com.bkonecsni.codeanalysis.menus.codeAnalysisMenu" label="Code Analysis">
          	    <command commandId="com.bkonecsni.codeanalysis.commands.listAllFilesCommand" id="com.bkonecsni.codeanalysis.menus.listAllFilesCommand" label="List all files" />
                 <command commandId="com.bkonecsni.codeanalysis.commands.listJavaFilesCommand" id="com.bkonecsni.codeanalysis.menus.listJavaFilesCommand" label="List Java files" />
-                <command commandId="com.bkonecsni.codeanalysis.commands.analyzeCodeCommand" id="com.bkonecsni.codeanalysis.menus.analyzeCodeCommand" label="Analyze code" />
+                <command commandId="com.bkonecsni.codeanalysis.commands.analyzeCodeCommand" id="com.bkonecsni.codeanalysis.menus.analyzeCodeCommand" label="Analyze code" style="toggle"/>
+                <command commandId="com.bkonecsni.codeanalysis.commands.analyzeAutomaticallyCommand" id="com.bkonecsni.codeanalysis.menus.analyzeAutomaticallyCommand"
+                label="Analyze automatically" tooltip="Enables automatic code analysis after every save action made on one of your resources" style="toggle"/>
          	</menu>
       	</menuContribution>
    	</extension>
@@ -22,6 +24,7 @@
        	<handler class="com.bkonecsni.codeanalysis.handlers.FileListHandler" commandId="com.bkonecsni.codeanalysis.commands.listAllFilesCommand" />
        	<handler class="com.bkonecsni.codeanalysis.handlers.JavaFileListHandler" commandId="com.bkonecsni.codeanalysis.commands.listJavaFilesCommand" />
     	<handler class="com.bkonecsni.codeanalysis.handlers.CodeAnalysisHandler" commandId="com.bkonecsni.codeanalysis.commands.analyzeCodeCommand" />
+		<handler class="com.bkonecsni.codeanalysis.handlers.AutomaticAnalysisHandler" commandId="com.bkonecsni.codeanalysis.commands.analyzeAutomaticallyCommand" />    	
     </extension>
     
 </plugin>

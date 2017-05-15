@@ -84,7 +84,7 @@ public class CodeAnalysisHandler extends CommonHandler{
 			
 			@Override
 			public void resourceChanged(IResourceChangeEvent arg0) {
-				if (autoAnalysisEnabled) {
+				if (AutomaticAnalysisHandler.AUTO_ANALYSIS_ENABLED) {
 					IEditorPart editorPart = getWindow().getActivePage().getActiveEditor();
 					if(editorPart != null) {
 						IProject activeProject = getActiveProject(editorPart);
