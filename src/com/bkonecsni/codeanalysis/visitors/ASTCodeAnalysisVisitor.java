@@ -84,34 +84,38 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
     }
     
     private void checkForNullAssignmentsInIfStatement(IfStatement node) {
-    	Statement thenStatement = node.getThenStatement();
+    	checkStatement(node.getThenStatement(), node);
     	
-    	if (thenStatement instanceof Block) {
-    		for (Object statement : ((Block) thenStatement).statements()) {
-    			if (statement instanceof ExpressionStatement) {    				
-    				Expression  expression = ((ExpressionStatement) statement).getExpression();
-    				if (expression instanceof Assignment) {
-    					Assignment assignment = (Assignment) expression;
-    					updateMapBasedOnLhsOrRhs(assignment, assignment.getLeftHandSide(), node.getParent());
-    					updateMapBasedOnLhsOrRhs(assignment, assignment.getRightHandSide(), node.getParent());
-    				}
+    	Statement elseStatement = node.getElseStatement();
+    	if (elseStatement != null) {
+        	checkStatement(elseStatement, node);
+    	}
+    }
+    
+    private void checkForNullAssignments(Assignment node) {
+   		updateMap(node, node.getParent().getParent(), true);
+    }
+    
+    private void checkStatement(Statement thenOrElseStatement, IfStatement node) {
+    	for (Object statement : ((Block) thenOrElseStatement).statements()) {
+    		if (statement instanceof ExpressionStatement) {    				
+    			Expression  expression = ((ExpressionStatement) statement).getExpression();
+    			if (expression instanceof Assignment) {
+    				Assignment assignment = (Assignment) expression;
+    				updateMap(assignment, node.getParent(), false);
     			}
     		}
     	}
     }
     
-    private void checkForNullAssignments(Assignment node) {
-   		updateMapBasedOnLhsOrRhs(node, node.getRightHandSide(), node.getParent().getParent());
-    }
-    
-    private void updateMapBasedOnLhsOrRhs(Assignment assignment, Expression expression, ASTNode blockNode) {
+    private void updateMap(Assignment assignment, ASTNode blockNode, boolean checkNewAssignment) {
 		String name = assignment.getLeftHandSide().toString();
 		Block block = blockNode instanceof Block ? (Block) blockNode : (Block) blockNode.getParent();
 		NodeKey nodeKey = new NodeKey(name, block);
     	
-    	if (expression.getNodeType() == ASTNode.NULL_LITERAL) {
-			nodeKeyPositionMap.put(nodeKey, expression.getStartPosition());
-		} else {
+    	if (assignment.getRightHandSide().getNodeType() == ASTNode.NULL_LITERAL) {
+			nodeKeyPositionMap.put(nodeKey, assignment.getStartPosition());
+		} else if (checkNewAssignment) {
 			if (nodeKeyPositionMap.containsKey(nodeKey)) {
 				nodeKeyPositionMap.remove(nodeKey);
 			}
@@ -162,7 +166,7 @@ public class ASTCodeAnalysisVisitor extends ASTVisitor {
 		try {			
 			IMarker marker = resource.createMarker(MARKER_TYPE);
 			marker.setAttribute(IMarker.MESSAGE, text);
-		    marker.setAttribute(IMarker.LOCATION, "line" + lineNumber);
+		    marker.setAttribute(IMarker.LOCATION, "line " + lineNumber);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
